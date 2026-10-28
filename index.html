@@ -79,6 +79,41 @@ summary::before{content:"▸ "}details[open] summary::before{content:"▾ "}
 .set{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mute);padding:8px 2px}
 .set input{width:64px;font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 footer{font-size:11.5px;color:var(--mute);line-height:1.6;margin-top:6px}
+
+/* ---------- Desktop / tablet ---------- */
+@media (min-width:720px){
+  .wrap{max-width:760px;padding:28px 24px 40px}
+  header{display:grid;grid-template-columns:1fr auto;grid-template-areas:"place clock" "title clock" "chips date";column-gap:24px;align-items:end;padding-bottom:18px}
+  .place{grid-area:place}
+  h1{grid-area:title;margin:2px 0 0}
+  .clock{grid-area:clock;font-size:56px;text-align:right}
+  .date{grid-area:date;text-align:right;margin-top:10px}
+  .chips{grid-area:chips;margin-top:10px}
+  .hero{grid-template-columns:1fr 1fr;gap:14px}
+  .big .cd{font-size:46px}
+}
+@media (min-width:1040px){
+  .wrap{max-width:1120px;padding:36px 32px 48px}
+  h1{font-size:28px}
+  .clock{font-size:68px}
+  .date{font-size:16px}
+  .card{padding:20px 22px;border-radius:22px}
+  .big .cd{font-size:60px}
+  .big .at b{font-size:26px}
+  .kind{font-size:15px}
+  .route{font-size:14px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+  .cols section{margin-bottom:0}
+  h2{font-size:17px}
+  .row{padding:13px 18px;grid-template-columns:70px 1fr auto}
+  .row .t{font-size:19px}
+  .row .cdp{font-size:15px;min-width:86px}
+  .list{max-height:62vh;overflow-y:auto}
+  footer{margin-top:28px;max-width:900px}
+}
+@media (min-width:1040px) and (hover:hover){
+  .row:hover{filter:brightness(.97)}
+}
 </style>
 </head>
 <body>
@@ -99,6 +134,7 @@ footer{font-size:11.5px;color:var(--mute);line-height:1.6;margin-top:6px}
 
   <div class="hero" id="hero"></div>
 
+  <div class="cols">
   <section>
     <h2>เรือไฟฟ้า Thai Smile Boat <small>Urban Line → สาทร</small></h2>
     <div id="tsNotice"></div>
@@ -117,6 +153,8 @@ footer{font-size:11.5px;color:var(--mute);line-height:1.6;margin-top:6px}
     <div class="list" id="exList"></div>
     <details id="exPastWrap"><summary id="exPastSum"></summary><div class="list" id="exPast"></div></details>
   </section>
+
+  </div>
 
   <footer>
     คำนวณจากเวลาประเทศไทย (UTC+7) ตามนาฬิกาเครื่อง · ทำงานได้โดยไม่ต้องใช้อินเทอร์เน็ต<br>
