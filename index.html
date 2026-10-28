@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>เวลาออกเรือ ท่านนทบุรี</title>
+<style>
+:root{
+  --bg:#f3f5f9;--card:#ffffff;--ink:#0f172a;--mute:#64748b;--line:#e5e9f0;
+  --y-bg:#fff6cc;--y-ink:#7a5200;--y-bd:#f2c200;
+  --r-bg:#ffe0df;--r-ink:#b3261e;--r-bd:#e5484d;
+  --ts:#6d2f8f;--ex:#1d4ed8;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0b1220;--card:#131c2e;--ink:#e8edf6;--mute:#93a1b8;--line:#22304a;
+    --y-bg:#3b3108;--y-ink:#ffd54a;--y-bd:#b88f00;
+    --r-bg:#451616;--r-ink:#ff8a85;--r-bd:#c2383d;}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Noto Sans Thai","Noto Sans Thai UI","Sarabun",Roboto,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px calc(32px + env(safe-area-inset-bottom))}
+header{padding:8px 2px 14px}
+.place{font-size:13px;color:var(--mute);letter-spacing:.02em}
+h1{margin:2px 0 10px;font-size:22px;font-weight:700}
+.clock{font-variant-numeric:tabular-nums;font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.date{margin-top:6px;color:var(--mute);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--mute)}
+.chip b{color:var(--ink);font-weight:600}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin:4px 2px 14px;align-items:center}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.dot.y{background:var(--y-bd)}.dot.r{background:var(--r-bd)}.dot.n{background:var(--line);border:1px solid var(--mute)}
+
+.hero{display:grid;gap:10px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;position:relative}
+.card .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kind{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.kind i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.kind.ts i{background:var(--ts)}.kind.ex i{background:var(--ex)}
+.nearest{font-size:11px;font-weight:700;background:var(--ink);color:var(--bg);padding:3px 8px;border-radius:999px}
+.big{display:flex;align-items:baseline;justify-content:space-between;margin-top:8px}
+.big .cd{font-variant-numeric:tabular-nums;font-size:40px;font-weight:700;letter-spacing:-.02em}
+.big .at{font-size:15px;color:var(--mute);text-align:right}
+.big .at b{color:var(--ink);font-size:20px;display:block}
+.route{margin-top:6px;font-size:13px;color:var(--mute);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.after{margin-top:8px;font-size:12px;color:var(--mute)}
+.card.st-y{background:var(--y-bg);border-color:var(--y-bd)}
+.card.st-y .cd{color:var(--y-ink)}
+.card.st-r{background:var(--r-bg);border-color:var(--r-bd);animation:pulse 1s ease-in-out infinite}
+.card.st-r .cd{color:var(--r-ink)}
+@keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--r-bd) 28%,transparent)}}
+@media (prefers-reduced-motion:reduce){.card.st-r{animation:none}}
+.empty{color:var(--mute);font-size:14px;padding:6px 0 2px}
+
+section{margin-bottom:20px}
+h2{font-size:15px;margin:0 2px 8px;display:flex;align-items:center;gap:8px}
+h2 small{font-weight:400;color:var(--mute);font-size:12px}
+.list{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center;padding:11px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .t{font-variant-numeric:tabular-nums;font-weight:700;font-size:17px}
+.row .mid{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--mute);min-width:0}
+.row .cdp{font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--bg);color:var(--mute);min-width:72px;text-align:center}
+.row.st-y{background:var(--y-bg)}.row.st-y .cdp{background:var(--y-bd);color:#2a1d00}
+.row.st-r{background:var(--r-bg)}.row.st-r .cdp{background:var(--r-bd);color:#fff}
+.row.past{opacity:.55}
+.row.past .cdp{background:transparent;font-weight:400}
+.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;color:#fff;white-space:nowrap}
+.b-orange{background:#e2742b}.b-yellow{background:#e0a800;color:#2a1d00}.b-ymid{background:#fff;color:#7a5200;border:1.5px solid #e0a800}
+.b-red{background:#c0392b}.b-ts{background:var(--ts)}
+details{margin-top:8px}
+summary{cursor:pointer;font-size:13px;color:var(--mute);padding:6px 2px;list-style:none}
+summary::before{content:"▸ "}details[open] summary::before{content:"▾ "}
+.note{font-size:12px;color:var(--mute);line-height:1.55;margin:8px 2px 0}
+.warn{background:var(--y-bg);border:1px solid var(--y-bd);color:var(--y-ink);border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.5;margin:0 0 8px}
+.set{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mute);padding:8px 2px}
+.set input{width:64px;font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+footer{font-size:11.5px;color:var(--mute);line-height:1.6;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="place">ท่าเรือนนทบุรี · N30</div>
+    <h1>เวลาออกเรือ</h1>
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="date" id="date"></div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="legend">
+    <span><i class="dot y"></i>≤ 30 นาที</span>
+    <span><i class="dot r"></i>≤ 10 นาที</span>
+    <span><i class="dot n"></i>มากกว่านั้น</span>
+  </div>
+
+  <div class="hero" id="hero"></div>
+
+  <section>
+    <h2>เรือไฟฟ้า Thai Smile Boat <small>Urban Line → สาทร</small></h2>
+    <div id="tsNotice"></div>
+    <div class="list" id="tsList"></div>
+    <details id="tsPastWrap"><summary id="tsPastSum"></summary><div class="list" id="tsPast"></div></details>
+    <div class="set">
+      <label for="off">ท่านนทบุรีออกช้ากว่าต้นทางพระนั่งเกล้า</label>
+      <input id="off" type="number" min="0" max="30" step="1" value="0" inputmode="numeric"> นาที
+    </div>
+    <div class="note">ตาราง Thai Smile ระบุเวลาออกจากพระนั่งเกล้า ไม่ได้ระบุเวลาท่านนทบุรี (N30 เป็นท่าถัดจากพระนั่งเกล้า) ถ้ารู้เวลาจริงที่ท่านนทบุรี ให้ตั้งส่วนต่างตรงนี้</div>
+  </section>
+
+  <section>
+    <h2>เรือด่วนเจ้าพระยา <small>ออกจากนนทบุรี</small></h2>
+    <div id="exNotice"></div>
+    <div class="list" id="exList"></div>
+    <details id="exPastWrap"><summary id="exPastSum"></summary><div class="list" id="exPast"></div></details>
+  </section>
+
+  <footer>
+    คำนวณจากเวลาประเทศไทย (UTC+7) ตามนาฬิกาเครื่อง · ทำงานได้โดยไม่ต้องใช้อินเทอร์เน็ต<br>
+    เรือด่วน: ใช้ตารางปกติทุกวัน ยกเว้น 28 ต.ค. 2569 ใช้ตารางพิเศษ (ธงแดงเป็น Riva Express เรือปรับอากาศ) · เสาร์–อาทิตย์มีเฉพาะธงเหลืองกลางวัน ไปวัดราชสิงขร · วันหยุดนักขัตฤกษ์ยังไม่ได้แยกตารางเรือด่วน ให้ตรวจกับประกาศอีกครั้ง<br>
+    Thai Smile: ตารางมีเฉพาะ 6–31 ต.ค. 2569 · เรือธงเขียวเหลือง (ปากเกร็ด–สาทร) ไม่ได้ออกจากนนทบุรีจึงไม่แสดง
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var OFF = 7*3600000;
+var DAYS = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+var MONS = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+
+/* ---------- ข้อมูลตาราง ---------- */
+var TS = {
+  from: "2026-10-06", to: "2026-10-31",
+  holidays: ["2026-10-13","2026-10-23"],
+  wd:  ["06:00","06:30","07:00","07:30","08:00","08:30","14:30","15:00","15:30","16:00","16:30","17:00"],
+  hol: ["06:30","07:00","07:30","08:00","08:30","09:00","14:30","15:00","15:30","16:00","16:30","17:00"]
+};
+var LINES = {
+  orange:{n:"ธงส้ม",c:"b-orange"}, yellow:{n:"ธงเหลือง",c:"b-yellow"},
+  ymid:{n:"ธงเหลืองกลางวัน",c:"b-ymid"}, red:{n:"ธงแดง Riva",c:"b-red"}
+};
+/* ตารางปกติ (ไม่มีกรณีพิเศษ) ออกจากนนทบุรี */
+var MIDDAY_WD  = ["08:15","08:40","09:20","10:00","10:40","11:10","11:40","12:10","12:40","13:10","13:40","14:10","14:40","15:10","15:40"];
+var MIDDAY_SAT = ["07:30","08:00","08:40","09:20","10:00","10:40","11:10","11:40","12:10","12:40","13:10","13:40","14:00","14:20","14:40","15:00","15:20","15:45","16:10","16:40","17:00"];
+var MIDDAY_SUN = ["08:40","09:10","09:40","10:10","10:40","11:10","11:40","12:10","12:40","13:10","13:40","14:00","14:20","14:40","15:00","15:20","15:45","16:10","16:35","17:00"];
+var EX_REG = {
+  wd:  [
+    {line:"orange", dest:"วัดราชสิงขร", t:["06:00","06:20","06:40","07:00","07:20","07:45","16:00","16:20","16:40","17:10","17:40","18:05"]},
+    {line:"ymid",   dest:"วัดราชสิงขร", t:MIDDAY_WD},
+    {line:"yellow", dest:"สาทร",        t:["06:00","06:20","06:40","07:00","07:15","07:45","08:05"]},
+    {line:"red",    dest:"สาทร",        t:["06:50","07:10","07:25","07:40"]}
+  ],
+  sat: [{line:"ymid", dest:"วัดราชสิงขร", t:MIDDAY_SAT}],
+  sun: [{line:"ymid", dest:"วัดราชสิงขร", t:MIDDAY_SUN}]
+};
+var EXPRESS = {
+  "2026-10-28": {
+    note: "วันนี้มีซ้อมขบวนพยุหยาตราทางชลมารค ระหว่างสะพานกรุงธน–สะพานพุทธ ตั้งแต่ 10.30 น. เป็นต้นไป",
+    trips: [
+      {line:"orange", dest:"วัดราชสิงขร", t:["06:00","06:25","06:50","07:15","07:45"]},
+      {line:"ymid",   dest:"วัดราชสิงขร", t:["08:15","08:40","09:10","09:45"]},
+      {line:"yellow", dest:"สาทร",        t:["06:00","06:20","06:40","07:00","07:15","07:45"]},
+      {line:"red",    dest:"สาทร",        t:["06:50","07:25"]},
+      {line:"ymid",   dest:"พายัพ",       t:["15:00","15:40"]},
+      {line:"orange", dest:"พายัพ",       t:["16:20","17:00"]}
+    ]
+  }
+};
+
+/* ---------- เวลา ---------- */
+var simBase = null, simStart = Date.now();
+(function(){
+  var q = new URLSearchParams(location.search).get("t"); /* ทดสอบ: ?t=2026-10-28T07:42:00 */
+  if(q){ var s = /[zZ]|[+-]\d\d:?\d\d$/.test(q) ? q : q + "+07:00"; var p = Date.parse(s); if(!isNaN(p)) simBase = p; }
+})();
+function nowMs(){ return simBase===null ? Date.now() : simBase + (Date.now()-simStart); }
+function p2(n){ return (n<10?"0":"")+n; }
+function parts(ms){ var d = new Date(ms+OFF); return {y:d.getUTCFullYear(),mo:d.getUTCMonth(),d:d.getUTCDate(),dow:d.getUTCDay(),h:d.getUTCHours(),mi:d.getUTCMinutes(),s:d.getUTCSeconds()}; }
+function keyOf(P){ return P.y+"-"+p2(P.mo+1)+"-"+p2(P.d); }
+function depMs(key,hhmm,addMin){ var k=key.split("-"), t=hhmm.split(":"); return Date.UTC(+k[0],+k[1]-1,+k[2],+t[0],+t[1]) - OFF + (addMin||0)*60000; }
+function clockStr(ms){ var P=parts(ms); return p2(P.h)+":"+p2(P.mi); }
+function cdStr(ms){ var s=Math.max(0,Math.floor(ms/1000)), h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return h>0 ? h+":"+p2(m)+":"+p2(x) : p2(m)+":"+p2(x); }
+function state(ms){ var s=ms/1000; return s<=600 ? "r" : s<=1800 ? "y" : "n"; }
+
+/* ---------- ตั้งค่า ---------- */
+var offEl = document.getElementById("off");
+try{ var sv = localStorage.getItem("tsOff"); if(sv!==null) offEl.value = sv; }catch(e){}
+function tsOff(){ var v = parseInt(offEl.value,10); return isNaN(v)?0:Math.max(0,Math.min(30,v)); }
+offEl.addEventListener("input", function(){ try{ localStorage.setItem("tsOff", String(tsOff())); }catch(e){} render(true); });
+
+/* ---------- สร้างรายการของวันนี้ ---------- */
+function build(P, key){
+  var ts=[], ex=[], info={};
+  var inRange = key>=TS.from && key<=TS.to;
+  var isHol = P.dow===0 || P.dow===6 || TS.holidays.indexOf(key)>=0;
+  info.tsOk = inRange; info.isHol = isHol;
+  if(inRange){
+    var add = tsOff();
+    (isHol?TS.hol:TS.wd).forEach(function(t){ ts.push({ms:depMs(key,t,add),kind:"ts",line:"ts",dest:"สาทร"}); });
+  }
+  var E = EXPRESS[key];
+  var trips = E ? E.trips : (P.dow===6 ? EX_REG.sat : P.dow===0 ? EX_REG.sun : EX_REG.wd);
+  info.exOk = true; info.exNote = E ? E.note : ""; info.exSpecial = !!E;
+  trips.forEach(function(g){ g.t.forEach(function(t){ ex.push({ms:depMs(key,t,0),kind:"ex",line:g.line,dest:g.dest}); }); });
+  ts.sort(function(a,b){return a.ms-b.ms;}); ex.sort(function(a,b){return a.ms-b.ms;});
+  return {ts:ts,ex:ex,info:info};
+}
+
+/* ---------- วาด ---------- */
+function badge(it){
+  if(it.kind==="ts") return '<span class="badge b-ts">Urban Line</span>';
+  var L = LINES[it.line]; return '<span class="badge '+L.c+'">'+L.n+'</span>';
+}
+function rowHtml(it, now, past){
+  var diff = it.ms-now, st = past ? "past" : "st-"+state(diff);
+  var right = past ? "ออกแล้ว" : cdStr(diff);
+  return '<div class="row '+st+'"><div class="t">'+clockStr(it.ms)+'</div><div class="mid">'+badge(it)+'<span>→ '+it.dest+'</span></div><div class="cdp">'+right+'</div></div>';
+}
+function heroHtml(kind, upcoming, now, nearest, notOk){
+  var title = kind==="ts" ? "เรือไฟฟ้า Thai Smile" : "เรือด่วนเจ้าพระยา";
+  var h = '<div class="card';
+  if(upcoming.length && !notOk){ h += ' st-'+state(upcoming[0].ms-now); }
+  h += '"><div class="hd"><div class="kind '+kind+'"><i></i>'+title+'</div>'+(nearest?'<span class="nearest">ใกล้ที่สุด</span>':'')+'</div>';
+  if(notOk){ h += '<div class="empty">ไม่มีข้อมูลตารางสำหรับวันนี้</div></div>'; return h; }
+  if(!upcoming.length){ h += '<div class="empty">หมดรอบของวันนี้แล้ว</div></div>'; return h; }
+  var n = upcoming[0];
+  h += '<div class="big"><div class="cd">'+cdStr(n.ms-now)+'</div><div class="at">ออกเวลา<b>'+clockStr(n.ms)+'</b></div></div>';
+  h += '<div class="route">'+badge(n)+'<span>นนทบุรี → '+n.dest+'</span></div>';
+  if(upcoming[1]) h += '<div class="after">ลำถัดไป '+clockStr(upcoming[1].ms)+' (อีก '+cdStr(upcoming[1].ms-now)+')</div>';
+  return h + '</div>';
+}
+function fill(listId, pastId, pastSumId, pastWrapId, arr, now, okFlag, emptyMsg){
+  var up = arr.filter(function(i){return i.ms>now;}), pa = arr.filter(function(i){return i.ms<=now;});
+  var L = document.getElementById(listId);
+  if(!okFlag) L.innerHTML = '<div class="row"><div class="empty" style="grid-column:1/-1">'+emptyMsg+'</div></div>';
+  else if(!up.length) L.innerHTML = '<div class="row"><div class="empty" style="grid-column:1/-1">หมดรอบของวันนี้แล้ว</div></div>';
+  else L.innerHTML = up.map(function(i){return rowHtml(i,now,false);}).join("");
+  var W = document.getElementById(pastWrapId);
+  if(okFlag && pa.length){
+    W.style.display = "";
+    document.getElementById(pastSumId).textContent = "ออกไปแล้ว ("+pa.length+")";
+    document.getElementById(pastId).innerHTML = pa.slice().reverse().map(function(i){return rowHtml(i,now,true);}).join("");
+  } else W.style.display = "none";
+  return up;
+}
+
+var lastSec = -1, lastSig = "";
+function render(force){
+  var now = nowMs(), sec = Math.floor(now/1000);
+  if(!force && sec===lastSec) return;
+  lastSec = sec;
+  var P = parts(now), key = keyOf(P), D = build(P,key), info = D.info;
+
+  document.getElementById("clock").textContent = p2(P.h)+":"+p2(P.mi)+":"+p2(P.s);
+  document.getElementById("date").textContent = "วัน"+DAYS[P.dow]+"ที่ "+P.d+" "+MONS[P.mo]+" "+(P.y+543);
+
+  var sig = key+"|"+info.isHol+"|"+info.tsOk+"|"+info.exSpecial+"|"+P.dow;
+  if(sig!==lastSig){
+    lastSig = sig;
+    var c = '';
+    c += '<span class="chip">Thai Smile: <b>'+(info.tsOk ? (info.isHol?"เสาร์–อาทิตย์/วันหยุด":"จันทร์–ศุกร์") : "ไม่มีตารางวันนี้")+'</b></span>';
+    c += '<span class="chip">เรือด่วน: <b>'+(info.exSpecial?"ตารางพิเศษวันนี้":(P.dow===6?"เสาร์":P.dow===0?"อาทิตย์":"จันทร์–ศุกร์"))+'</b></span>';
+    document.getElementById("chips").innerHTML = c;
+    document.getElementById("tsNotice").innerHTML = "";
+    document.getElementById("exNotice").innerHTML = info.exNote ? '<div class="warn">'+info.exNote+'</div>' : "";
+  }
+
+  var tsUp = fill("tsList","tsPast","tsPastSum","tsPastWrap",D.ts,now,info.tsOk,"ตาราง Thai Smile ที่มีอยู่ครอบคลุมเฉพาะ 6–31 ต.ค. 2569");
+  var exUp = fill("exList","exPast","exPastSum","exPastWrap",D.ex,now,info.exOk,"");
+
+  var tsN = tsUp.length ? tsUp[0].ms : Infinity, exN = exUp.length ? exUp[0].ms : Infinity;
+  var tsNear = tsN < exN, exNear = exN < tsN;
+  document.getElementById("hero").innerHTML =
+    heroHtml("ts", tsUp, now, tsNear, !info.tsOk) + heroHtml("ex", exUp, now, exNear, !info.exOk);
+}
+render(true);
+setInterval(render, 250);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) render(true); });
+})();
+</script>
+</body>
+</html>
